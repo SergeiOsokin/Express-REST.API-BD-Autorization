@@ -32,6 +32,7 @@ const user = new mongoose.Schema({
   password: {
     select: false, // не работает, хэш возвращается при создании юзера
     type: String,
+    minlength: 2,
     required: true,
 
   },

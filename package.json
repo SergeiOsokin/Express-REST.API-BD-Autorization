@@ -1,6 +1,6 @@
 {
   "name": "sprint-14",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Создание сервера на Express. Релизация REST.API + MongoDB + Autorization",
   "main": "index.js",
   "scripts": {

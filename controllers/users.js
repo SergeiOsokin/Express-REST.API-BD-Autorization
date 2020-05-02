@@ -41,14 +41,17 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10).then((hash) => {
-    User.create({
-      name, about, avatar, email, password: hash,
-    })
-      .then((user) => User.findById({ _id: user._id }))
-      .then((user) => res.send({ data: user }))
-      .catch((err) => next(err));
-  });
+  if (password.length > 6) {
+    return bcrypt.hash(password, 10).then((hash) => {
+      User.create({
+        name, about, avatar, email, password: hash,
+      })
+        .then((user) => User.findById({ _id: user._id }))
+        .then((user) => res.send({ data: user }))
+        .catch((err) => next(err));
+    });
+  }
+  return res.status(400).send({ message: password.length });
 };
 
 const changeUser = (req, res, next) => {
