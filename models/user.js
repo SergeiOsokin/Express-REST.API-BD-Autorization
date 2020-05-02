@@ -2,6 +2,7 @@
 /* eslint-disable func-names */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
 const user = new mongoose.Schema({
   name: {
@@ -19,7 +20,11 @@ const user = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
-    match: /(https?:\/\/)(www\.)?((\w+\.\w{2,})|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))(:\d{2,5})?.*#?/i,
+    validate: {
+      validator(url) {
+        return validator.isURL(url);
+      },
+    },
   },
   email: {
     type: String,
@@ -27,7 +32,11 @@ const user = new mongoose.Schema({
       unique: true,
     },
     required: true,
-    match: /[a-zA-Z0-1\W\D]{1,}@[[a-zA-Z0-1\W\D]{1,}\.[a-zA-Z]{2,3}/i,
+    validate: {
+      validator(email) {
+        return validator.isEmail(email);
+      },
+    },
   },
   password: {
     select: false, // не работает, хэш возвращается при создании юзера
