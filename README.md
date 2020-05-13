@@ -1,5 +1,5 @@
 # Express-REST.API-BD-Autorization
-Version 1.0.1
+Version 1.0.2
 
 Для развертывания проекта локально необходимо:
 
