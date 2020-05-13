@@ -26,11 +26,12 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(limiter);
 app.use(bodyParser.json());
 app.use(helmet());
+
 app.post('/signin', login);
 app.post('/signup', createUser);
-app.use(auth);
-app.use('/users', routerUsers);
-app.use('/cards', routerCards);
+// app.use(auth);
+app.use('/users', auth, routerUsers);
+app.use('/cards', auth, routerCards);
 app.use('*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

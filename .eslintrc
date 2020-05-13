@@ -3,5 +3,4 @@
   "rules": {
     "no-underscore-dangle": "off"
   }
-
 }

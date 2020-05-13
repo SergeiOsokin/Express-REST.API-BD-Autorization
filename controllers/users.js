@@ -51,7 +51,7 @@ const createUser = (req, res, next) => {
         .catch((err) => next(err));
     });
   }
-  return res.status(400).send({ message: password.length });
+  return res.status(400).send({ message: 'Проблема с паролем. А body точно есть?' });
 };
 
 const changeUser = (req, res, next) => {
