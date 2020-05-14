@@ -35,11 +35,12 @@ app.use('/cards', auth, routerCards);
 app.use('*', (req, res) => res.status(404).send({ message: 'Запрашиваемый ресурс не найден' }));
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  if (err.status !== 500) {
-    const mes = (err.name === 'ValidationError') ? `Ошибка валидаци: ${err.message}` : `Ошибка: ${err.message}`;
-    return res.status(404).send({ message: mes });
+  if (err.statusCode) {
+    return res.status(err.statusCode).send({ message: err.message });
+    // return res.status(404).send({ message: err.message });'Произошла ошибка на сервере'
   }
   return res.status(500).send({ message: 'Произошла ошибка на сервере' });
+  // return res.status(500).send({ message: err.message });
 });
 
 app.listen(PORT, () => {

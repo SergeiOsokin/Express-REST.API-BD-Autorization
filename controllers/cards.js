@@ -1,18 +1,24 @@
 /* eslint-disable no-shadow */
 const card = require('../models/card');
+const { NotYourCard, NotCards } = require('../errors/errors');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   card.find({})
     .populate('owner')
-    .then((card) => res.send({ card }))
-    .catch(() => res.status(500).send({ message: 'Получить все карточки не удалось' }));
+    .then((card) => {
+      if (!card) {
+        throw new NotCards('Получить все карточки не удалось');
+      }
+      res.send({ card });
+    })
+    .catch(next);
 };
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ card }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const deleteCard = (req, res, next) => {
@@ -22,9 +28,9 @@ const deleteCard = (req, res, next) => {
       if (card && (req.user._id == card.owner)) {
         return res.send({ message: 'Карточка удалена' });
       }
-      return Promise.reject(new Error('Не ваша карточка'));
+      throw new NotYourCard('Не ваша карточка');
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const likeCard = (req, res, next) => {
@@ -37,7 +43,7 @@ const likeCard = (req, res, next) => {
       }
       return next();
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
@@ -50,7 +56,7 @@ const dislikeCard = (req, res, next) => {
       }
       return next();
     })
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports = {

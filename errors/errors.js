@@ -1,0 +1,45 @@
+/* eslint-disable max-classes-per-file */
+class NotFoundUser extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 404;
+  }
+}
+class BrokenPassword extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
+
+class NotYourProfile extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
+
+class NotYourCard extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
+
+class BadToken extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
+
+class NotCards extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 404;
+  }
+}
+
+module.exports = {
+  NotFoundUser, BrokenPassword, NotYourProfile, BadToken, NotYourCard, NotCards,
+};
