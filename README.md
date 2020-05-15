@@ -1,7 +1,17 @@
 # Express-REST.API-BD-Autorization
 Version 1.0.5
 
-Для развертывания проекта локально необходимо:
+Публичный IP-адрес сервера: 84.201.149.82.
+
+возвращает front-end: 
+- https://sergeiosokinmestro.tk
+- https://www.sergeiosokinmestro.tk
+
+для тестирования запросов:
+- https://api.sergeiosokinmestro.tk
+- https://www.api.sergeiosokinmestro.tk
+
+Для развертывания сервера локально необходимо:
 
 - скопировать репозиторий;
 - выполнить команду npm install,
