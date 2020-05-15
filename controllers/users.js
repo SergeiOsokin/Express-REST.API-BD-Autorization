@@ -40,19 +40,16 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (password.length > 6) {
-    return bcrypt.hash(password, 10)
-      .then((hash) => {
-        User.create({
-          name, about, avatar, email, password: hash,
-        })
-          .then((user) => User.findById({ _id: user._id }))
-          .then((user) => res.send({ data: user }))
-          .catch(next);
+  return bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name, about, avatar, email, password: hash,
       })
-      .catch(next);
-  }
-  return res.status(400).send({ message: 'Проблема с паролем. А body точно есть?' });
+        .then((user) => User.findById({ _id: user._id }))
+        .then((user) => res.send({ data: user }))
+        .catch(next);
+    })
+    .catch(next);
 };
 
 const changeUser = (req, res, next) => {

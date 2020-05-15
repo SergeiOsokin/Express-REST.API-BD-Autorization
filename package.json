@@ -1,6 +1,6 @@
 {
   "name": "sprint-14",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Создание сервера на Express. Релизация REST.API + MongoDB + Autorization",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "celebrate": "^12.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.3",
