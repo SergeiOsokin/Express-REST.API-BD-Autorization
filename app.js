@@ -44,10 +44,10 @@ app.use('*', (req, res) => res.status(404).send({ message: 'Запрашивае
 app.use(errors());
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  if (err.statusCode) {
-    return res.status(err.statusCode).send({ message: err.message });
+  if (err.statusCode || err.name === 'ValidationError') {
+    return res.status(err.statusCode || 400).send(`Ошибка: ${err.message}`);
   }
-  return res.status(500).send({ message: 'Произошла ошибка на сервере' });
+  return res.status(500).send(`Ошибка на сервере: ${err.message}`);
 });
 
 app.listen(PORT, () => {

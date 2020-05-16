@@ -1,5 +1,5 @@
 # Express-REST.API-BD-Autorization
-Version 1.0.5
+Version 1.0.9
 
 Публичный IP-адрес сервера: 84.201.149.82.
 

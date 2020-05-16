@@ -40,7 +40,7 @@ const user = new mongoose.Schema({
     },
   },
   password: {
-    select: false, // не работает, хэш возвращается при создании юзера
+    select: false, // при создании пользователя не сработает. Сработает при поиске/фильтрации
     type: String,
     minlength: 6,
     required: true,
