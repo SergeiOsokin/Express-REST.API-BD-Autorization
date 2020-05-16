@@ -45,9 +45,9 @@ app.use(errors());
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   if (err.statusCode || err.name === 'ValidationError') {
-    return res.status(err.statusCode || 400).send(`Ошибка: ${err.message}`);
+    return res.status(err.statusCode || 400).send({ message: `Ошибка: ${err.message}` });
   }
-  return res.status(500).send(`Ошибка на сервере: ${err.message}`);
+  return res.status(500).send({ message: `Ошибка на сервере: ${err.message}` });
 });
 
 app.listen(PORT, () => {
