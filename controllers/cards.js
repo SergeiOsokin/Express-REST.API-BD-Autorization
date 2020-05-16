@@ -5,12 +5,8 @@ const { NotYourCard, NotCards } = require('../errors/errors');
 const getCards = (req, res, next) => {
   card.find({})
     .populate('owner')
-    .then((card) => {
-      if (!card) {
-        throw new NotCards('Получить все карточки не удалось');
-      }
-      res.send({ data: card });
-    })
+    .orFail(new NotCards('Получить все карточки не удалось'))
+    .then((card) => res.send({ data: card }))
     .catch(next);
 };
 
@@ -22,10 +18,11 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  card.findByIdAndRemove(req.params.cardId)
+  card.findByIdAndDelete(req.params.cardId)
+    .orFail(new NotCards('Карточка не нашлась'))
     .then((card) => {
       // eslint-disable-next-line eqeqeq
-      if (card && (req.user._id == card.owner)) {
+      if (req.user._id == card.owner) {
         return res.send({ message: 'Карточка удалена' });
       }
       throw new NotYourCard('Не ваша карточка');
@@ -37,12 +34,8 @@ const likeCard = (req, res, next) => {
   card.findByIdAndUpdate(req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true })
-    .then((card) => {
-      if (card) {
-        return res.send({ data: card });
-      }
-      return next();
-    })
+    .orFail(new NotCards('Карточка не нашлась'))
+    .then((card) => res.send({ data: card }))
     .catch(next);
 };
 
@@ -50,12 +43,8 @@ const dislikeCard = (req, res, next) => {
   card.findByIdAndUpdate(req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true })
-    .then((card) => {
-      if (card) {
-        return res.send({ data: card });
-      }
-      return next();
-    })
+    .orFail(new NotCards('Карточка не нашлась'))
+    .then((card) => res.send({ data: card }))
     .catch(next);
 };
 

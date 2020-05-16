@@ -22,17 +22,14 @@ const login = (req, res, next) => {
 
 const getUsers = (req, res, next) => {
   User.find({})
+    .orFail(new NotFoundUser('Нет пользователей'))
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    .then(((user) => {
-      if (!user) {
-        throw NotFoundUser('Нет такого юзера');
-      }
-      return res.send({ data: user });
-    }))
+    .orFail(new NotFoundUser('Нет такого юзера'))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
@@ -55,9 +52,10 @@ const createUser = (req, res, next) => {
 const changeUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findById(req.params.me)
+    .orFail(new NotFoundUser('Пользователь не найден'))
     .then((user) => {
       // eslint-disable-next-line eqeqeq
-      if (!(user && (req.user._id == user._id))) {
+      if (!(req.user._id == user._id)) {
         throw new NotYourProfile('Не ваш профиль');
       }
       return User.findByIdAndUpdate(req.params.me,
@@ -74,9 +72,10 @@ const changeUser = (req, res, next) => {
 const changeUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findById(req.params.me)
+    .orFail(new NotFoundUser('Пользователь не найден'))
     .then((user) => {
       // eslint-disable-next-line eqeqeq
-      if (!(user && (req.user._id == user._id))) {
+      if (!(req.user._id == user._id)) {
         throw new NotYourProfile('Не ваш профиль');
       }
       return User.findByIdAndUpdate(req.params.me,
