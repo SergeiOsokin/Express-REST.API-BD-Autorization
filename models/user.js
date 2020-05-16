@@ -42,7 +42,7 @@ const user = new mongoose.Schema({
   password: {
     select: false, // не работает, хэш возвращается при создании юзера
     type: String,
-    minlength: 2,
+    minlength: 6,
     required: true,
 
   },
@@ -53,12 +53,12 @@ user.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password') // добавляем, чтобы был хэш, если аторизация норм.
     .then((user) => {
       if (!user) {
-        throw new NotFoundUser('Не нашел юзера по емайл');
+        throw new NotFoundUser('Не удалось найти пользователя с таким email');
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new BrokenPassword('Проблема с паролем');
+            throw new BrokenPassword('Не правильный логин или пароль');
           }
           return user;
         });

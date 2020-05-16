@@ -9,7 +9,7 @@ const getCards = (req, res, next) => {
       if (!card) {
         throw new NotCards('Получить все карточки не удалось');
       }
-      res.send({ card });
+      res.send({ data: card });
     })
     .catch(next);
 };
@@ -17,7 +17,7 @@ const getCards = (req, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   card.create({ name, link, owner: req.user._id })
-    .then((card) => res.send({ card }))
+    .then((card) => res.send({ data: card }))
     .catch(next);
 };
 
@@ -39,7 +39,7 @@ const likeCard = (req, res, next) => {
     { new: true })
     .then((card) => {
       if (card) {
-        return res.send({ card });
+        return res.send({ data: card });
       }
       return next();
     })
@@ -52,7 +52,7 @@ const dislikeCard = (req, res, next) => {
     { new: true })
     .then((card) => {
       if (card) {
-        return res.send({ card });
+        return res.send({ data: card });
       }
       return next();
     })

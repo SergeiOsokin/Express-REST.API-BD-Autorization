@@ -22,7 +22,7 @@ const login = (req, res, next) => {
 
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.send({ user }))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 const getUser = (req, res, next) => {
@@ -31,7 +31,7 @@ const getUser = (req, res, next) => {
       if (!user) {
         throw NotFoundUser('Нет такого юзера');
       }
-      return res.send({ user });
+      return res.send({ data: user });
     }))
     .catch(next);
 };

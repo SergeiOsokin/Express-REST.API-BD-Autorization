@@ -46,10 +46,8 @@ app.use(errors());
 app.use((err, req, res, next) => {
   if (err.statusCode) {
     return res.status(err.statusCode).send({ message: err.message });
-    // return res.status(404).send({ message: err.message });'Произошла ошибка на сервере'
   }
   return res.status(500).send({ message: 'Произошла ошибка на сервере' });
-  // return res.status(500).send({ message: err.message });
 });
 
 app.listen(PORT, () => {
