@@ -13,7 +13,6 @@ const validationChangeAvatar = celebrate({
     avatar: urlValidation,
   }).unknown(true),
   headers: Joi.object().keys({
-    // authorization: Joi.string().required(),
     cookie: Joi.string().required(),
   }).unknown(true),
 });
@@ -27,7 +26,6 @@ const validationChangeNameAbout = celebrate({
     about: Joi.string().required().min(2).max(30),
   }).unknown(true),
   headers: Joi.object().keys({
-    // authorization: Joi.string().required(),
     cookie: Joi.string().required(),
   }).unknown(true),
 });

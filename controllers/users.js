@@ -54,7 +54,7 @@ const changeUser = (req, res, next) => {
     .orFail(new NotFoundUser('Пользователь не найден'))
     .then((user) => {
       // eslint-disable-next-line eqeqeq
-      if (!(req.user._id == user._id)) {
+      if (req.user._id !== user._id) {
         throw new NotYourProfile('Не ваш профиль');
       }
       return User.findByIdAndUpdate(req.params.me,
@@ -74,7 +74,7 @@ const changeUserAvatar = (req, res, next) => {
     .orFail(new NotFoundUser('Пользователь не найден'))
     .then((user) => {
       // eslint-disable-next-line eqeqeq
-      if (!(req.user._id == user._id)) {
+      if (req.user._id !== user._id) {
         throw new NotYourProfile('Не ваш профиль');
       }
       return User.findByIdAndUpdate(req.params.me,

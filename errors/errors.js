@@ -19,7 +19,7 @@ class NotYourProfile extends Error {
   }
 }
 
-class NotYourCard extends Error {
+class PermissionError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 400;
@@ -33,7 +33,7 @@ class BadToken extends Error {
   }
 }
 
-class NotCards extends Error {
+class CardNotExist extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 404;
@@ -41,5 +41,5 @@ class NotCards extends Error {
 }
 
 module.exports = {
-  NotFoundUser, BrokenPassword, NotYourProfile, BadToken, NotYourCard, NotCards,
+  NotFoundUser, BrokenPassword, NotYourProfile, BadToken, PermissionError, CardNotExist,
 };
