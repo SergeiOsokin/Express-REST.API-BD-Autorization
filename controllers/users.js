@@ -2,10 +2,11 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const { NotYourProfile, NotFoundUser } = require('../errors/errors');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -16,52 +17,45 @@ const login = (req, res) => {
         .cookie('jwt', token, { httpOnly: true, sameSite: true })
         .end();
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.send({ user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка на сервере' }));
+    .orFail(new NotFoundUser('Нет пользователей'))
+    .then((user) => res.send({ data: user }))
+    .catch(next);
 };
 const getUser = (req, res, next) => {
   User.findById(req.params.userId)
-    .then(((user) => {
-      if (user) {
-        return res.send({ user });
-      }
-      return next();
-    }))
-    .catch((err) => next(err));
+    .orFail(new NotFoundUser('Нет такого юзера'))
+    .then((user) => res.send({ data: user }))
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  if (password.length > 6) {
-    return bcrypt.hash(password, 10).then((hash) => {
+  return bcrypt.hash(password, 10)
+    .then((hash) => {
       User.create({
         name, about, avatar, email, password: hash,
       })
-        .then((user) => User.findById({ _id: user._id }))
         .then((user) => res.send({ data: user }))
-        .catch((err) => next(err));
-    });
-  }
-  return res.status(400).send({ message: 'Проблема с паролем. А body точно есть?' });
+        .catch(next);
+    })
+    .catch(next);
 };
 
 const changeUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findById(req.params.me)
+    .orFail(new NotFoundUser('Пользователь не найден'))
     .then((user) => {
-      // прежде чем изменить, проверим, что можно это делать
       // eslint-disable-next-line eqeqeq
-      if (!(user && (req.user._id == user._id))) {
-        return Promise.reject(new Error('Не ваш профиль'));
+      if (req.user._id !== user._id) {
+        throw new NotYourProfile('Не ваш профиль');
       }
       return User.findByIdAndUpdate(req.params.me,
         { name, about },
@@ -71,17 +65,17 @@ const changeUser = (req, res, next) => {
         });
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 const changeUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findById(req.params.me)
+    .orFail(new NotFoundUser('Пользователь не найден'))
     .then((user) => {
-      // прежде чем изменить, проверим, что можно это делать
       // eslint-disable-next-line eqeqeq
-      if (!(user && (req.user._id == user._id))) {
-        return Promise.reject(new Error('Не ваш профиль'));
+      if (req.user._id !== user._id) {
+        throw new NotYourProfile('Не ваш профиль');
       }
       return User.findByIdAndUpdate(req.params.me,
         { avatar },
@@ -91,7 +85,7 @@ const changeUserAvatar = (req, res, next) => {
         });
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports = {
